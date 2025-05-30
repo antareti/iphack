@@ -2,19 +2,9 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iphack - Симулятор IP-камер</title>
-  <style><style>
-  body {
-    background: url('200.gif') no-repeat center center fixed;
-    background-size: cover;
-    color: #0f0;
-    font-family: monospace;
-    margin: 0;
-    padding: 0;
-  }
-  /* Остальные стили остаются без изменений... */
-
+  <style>
     body {
       background-color: #000;
       color: #0f0;
@@ -25,11 +15,12 @@
     .container {
       padding: 20px;
     }
-    .console, #stream {
+    .console, #stream, .info {
       background: #111;
       border: 1px solid #0f0;
-      padding: 10px;
+      padding: 15px;
       margin-top: 20px;
+      border-radius: 5px;
     }
     .hidden {
       display: none;
@@ -38,32 +29,31 @@
       background: #222;
       color: #0f0;
       border: 1px solid #0f0;
-      padding: 5px;
-      width: 300px;
+      padding: 8px;
+      width: 280px;
     }
     button {
       background: #0f0;
       color: #000;
       border: none;
-      padding: 5px 10px;
-      margin-left: 5px;
+      padding: 8px 12px;
+      margin-left: 10px;
       cursor: pointer;
+      font-weight: bold;
     }
     video {
       width: 100%;
       max-width: 600px;
       margin-top: 10px;
       border: 2px solid #0f0;
+      border-radius: 4px;
     }
     .controls {
       margin-top: 10px;
     }
-    .info {
-      margin-top: 20px;
+    .info p {
+      margin: 4px 0;
       font-size: 14px;
-      background-color: #111;
-      padding: 10px;
-      border: 1px solid #0f0;
     }
     .info strong {
       color: #fff;
@@ -72,17 +62,23 @@
       text-align: center;
       padding: 20px;
       color: #0f0;
+      font-size: 14px;
     }
     a {
       color: #0f0;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>💀 iphack</h1>
-    <div class="console" id="console">
-      <p>> Введите IP-камеры:</p>
+
+    <div class="console">
+      <p>&gt; Введите IP-камеры:</p>
       <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
       <button onclick="connectCamera()">Подключиться</button>
     </div>
@@ -91,13 +87,15 @@
       <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
       <video id="camFeed" autoplay muted loop>
         <source id="camSource" src="" type="video/mp4" />
-        Ваш браузер не поддерживает видео.
+        Ваш браузер не поддерживает воспроизведение видео.
       </video>
+
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
         <button onclick="takeScreenshot()">Скриншот</button>
         <button onclick="disconnectCamera()">Отключиться</button>
       </div>
+
       <div class="info">
         <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
         <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
@@ -107,7 +105,7 @@
     </div>
 
     <footer>
-      <p>iphack © 2025 — чисто визуальный реально </p>
+      <p>iphack © 2025 — чисто визуальный эффект</p>
       <p><a href="https://t.me/vipcam1977" target="_blank">Обратная связь</a></p>
     </footer>
   </div>
@@ -123,12 +121,7 @@
     const fakeActivity = document.getElementById('fakeActivity');
     const currentIP = document.getElementById('currentIP');
 
-    // Показываем только 1.mp4 и 2.mp4
-    const videoSources = [
-      'videos/1.mp4',
-      'videos/2.mp4'
-    ];
-
+    const videoSources = ['videos/1.mp4', 'videos/2.mp4'];
     const fakeData = [
       { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
       { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
@@ -151,16 +144,17 @@
         alert('Введите IP-адрес камеры!');
         return;
       }
-      streamBlock.classList.remove('hidden');
       currentIndex = 0;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      camFeed.play();
-      updateFakeInfo(currentIndex);
+      updateStream();
+      streamBlock.classList.remove('hidden');
     }
 
     function nextCamera() {
       currentIndex = (currentIndex + 1) % videoSources.length;
+      updateStream();
+    }
+
+    function updateStream() {
       camSource.src = videoSources[currentIndex];
       camFeed.load();
       camFeed.play();
@@ -168,7 +162,7 @@
     }
 
     function takeScreenshot() {
-      alert('Скриншот сохранён (фейк).');
+      alert('Скриншот сохранён (на самом деле — нет).');
     }
 
     function disconnectCamera() {
