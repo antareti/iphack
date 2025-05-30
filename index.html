@@ -141,6 +141,7 @@
         return;
       }
       streamBlock.classList.remove('hidden');
+      currentIndex = Math.floor(Math.random() * videoSources.length);
       camFeed.src = videoSources[currentIndex];
       camFeed.load();
       updateFakeInfo(currentIndex);
