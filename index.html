@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>iphack - Симулятор IP-камер</title>
-  <link rel="stylesheet" href="style.css">
   <style>
     body {
       background-color: #000;
@@ -74,14 +73,14 @@
     <h1>💀 iphack</h1>
     <div class="console" id="console">
       <p>> Введите IP-камеры:</p>
-      <input type="text" id="ipInput" placeholder="Например, 192.168.0.23">
+      <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
       <button onclick="connectCamera()">Подключиться</button>
     </div>
 
     <div id="stream" class="hidden">
       <p class="status">[*] Подключение установлено...</p>
       <video id="camFeed" autoplay muted loop>
-        <source src="videos/fake1.mp4" type="video/mp4">
+        <source src="videos/1.mp4" type="video/mp4" />
         Ваш браузер не поддерживает видео.
       </video>
       <div class="controls">
@@ -113,15 +112,13 @@
     const fakeActivity = document.getElementById('fakeActivity');
 
     const videoSources = [
-      'videos/fake1.mp4',
-      'videos/fake2.mp4',
-      'videos/fake3.mp4'
+      'videos/1.mp4',
+      'videos/2.mp4'
     ];
 
     const fakeData = [
       { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
-      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' },
-      { ip: '172.16.5.9', location: 'Минск, Беларусь', device: 'TP-Link NC450', activity: 'Гараж, вспышки света' }
+      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
     ];
 
     let currentIndex = 0;
@@ -135,13 +132,13 @@
     }
 
     function connectCamera() {
-      const ip = ipInput.value;
-      if (ip.trim() === '') {
+      const ip = ipInput.value.trim();
+      if (!ip) {
         alert('Введите IP-адрес камеры!');
         return;
       }
       streamBlock.classList.remove('hidden');
-      currentIndex = Math.floor(Math.random() * videoSources.length);
+      currentIndex = 0; // стартуем с первого видео
       camFeed.src = videoSources[currentIndex];
       camFeed.load();
       updateFakeInfo(currentIndex);
