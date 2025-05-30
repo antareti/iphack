@@ -2,83 +2,95 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>iphack - Симулятор IP-камер</title>
   <style>
     body {
-      background-color: #000;
-      color: #0f0;
-      font-family: monospace;
       margin: 0;
       padding: 0;
+      font-family: monospace;
+      color: #0f0;
+      background: url("200.gif") no-repeat center center fixed;
+      background-size: cover;
     }
-    .container {
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.85);
+      min-height: 100vh;
       padding: 20px;
     }
-    .console, #stream, .info {
+
+    h1 {
+      margin: 0;
+    }
+
+    .console, #stream {
       background: #111;
       border: 1px solid #0f0;
       padding: 15px;
       margin-top: 20px;
-      border-radius: 5px;
     }
-    .hidden {
-      display: none;
-    }
+
     input[type="text"] {
       background: #222;
       color: #0f0;
       border: 1px solid #0f0;
-      padding: 8px;
-      width: 280px;
+      padding: 5px;
+      width: 300px;
     }
+
     button {
       background: #0f0;
       color: #000;
       border: none;
-      padding: 8px 12px;
-      margin-left: 10px;
+      padding: 5px 10px;
+      margin-left: 5px;
       cursor: pointer;
-      font-weight: bold;
     }
+
     video {
       width: 100%;
       max-width: 600px;
       margin-top: 10px;
       border: 2px solid #0f0;
-      border-radius: 4px;
     }
+
     .controls {
       margin-top: 10px;
     }
-    .info p {
-      margin: 4px 0;
+
+    .info {
+      margin-top: 20px;
       font-size: 14px;
+      background-color: #111;
+      padding: 10px;
+      border: 1px solid #0f0;
     }
+
     .info strong {
       color: #fff;
     }
+
     footer {
       text-align: center;
       padding: 20px;
       color: #0f0;
-      font-size: 14px;
     }
+
     a {
       color: #0f0;
-      text-decoration: none;
     }
-    a:hover {
-      text-decoration: underline;
+
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="overlay">
     <h1>💀 iphack</h1>
-
     <div class="console">
-      <p>&gt; Введите IP-камеры:</p>
+      <p>> Введите IP-камеры:</p>
       <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
       <button onclick="connectCamera()">Подключиться</button>
     </div>
@@ -87,15 +99,13 @@
       <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
       <video id="camFeed" autoplay muted loop>
         <source id="camSource" src="" type="video/mp4" />
-        Ваш браузер не поддерживает воспроизведение видео.
+        Ваш браузер не поддерживает видео.
       </video>
-
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
         <button onclick="takeScreenshot()">Скриншот</button>
         <button onclick="disconnectCamera()">Отключиться</button>
       </div>
-
       <div class="info">
         <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
         <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
@@ -105,7 +115,7 @@
     </div>
 
     <footer>
-      <p>iphack © 2025 — чисто визуальный эффект</p>
+      <p>iphack © 2025 — чисто визуальный реально</p>
       <p><a href="https://t.me/vipcam1977" target="_blank">Обратная связь</a></p>
     </footer>
   </div>
@@ -144,17 +154,16 @@
         alert('Введите IP-адрес камеры!');
         return;
       }
-      currentIndex = 0;
-      updateStream();
       streamBlock.classList.remove('hidden');
+      currentIndex = 0;
+      camSource.src = videoSources[currentIndex];
+      camFeed.load();
+      camFeed.play();
+      updateFakeInfo(currentIndex);
     }
 
     function nextCamera() {
       currentIndex = (currentIndex + 1) % videoSources.length;
-      updateStream();
-    }
-
-    function updateStream() {
       camSource.src = videoSources[currentIndex];
       camFeed.load();
       camFeed.play();
@@ -162,7 +171,7 @@
     }
 
     function takeScreenshot() {
-      alert('Скриншот сохранён (на самом деле — нет).');
+      alert('Скриншот сохранён (фейк).');
     }
 
     function disconnectCamera() {
