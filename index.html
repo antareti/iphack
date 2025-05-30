@@ -48,21 +48,10 @@
       cursor: pointer;
     }
 
-    video {
+    img.preview {
       width: 100%;
       max-width: 600px;
       margin-top: 10px;
-      border: 2px solid #0f0;
-    }
-
-    .screenshot-images {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .screenshot-images img {
-      max-width: 300px;
       border: 2px solid #0f0;
     }
 
@@ -108,14 +97,7 @@
 
     <div id="stream" class="hidden">
       <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
-      <video id="camFeed" autoplay muted loop>
-        <source id="camSource" src="" type="video/mp4" />
-        Ваш браузер не поддерживает видео.
-      </video>
-      <div class="screenshot-images">
-        <img src="1.jpg" alt="Камера 1" />
-        <img src="2.jpg" alt="Камера 2" />
-      </div>
+      <img id="camImage" class="preview" src="" alt="Камера">
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
         <button onclick="takeScreenshot()">Скриншот</button>
@@ -137,8 +119,7 @@
 
   <script>
     const streamBlock = document.getElementById('stream');
-    const camFeed = document.getElementById('camFeed');
-    const camSource = document.getElementById('camSource');
+    const camImage = document.getElementById('camImage');
     const ipInput = document.getElementById('ipInput');
     const fakeIp = document.getElementById('fakeIp');
     const fakeLocation = document.getElementById('fakeLocation');
@@ -146,7 +127,7 @@
     const fakeActivity = document.getElementById('fakeActivity');
     const currentIP = document.getElementById('currentIP');
 
-    const videoSources = ['videos/1.mp4', 'videos/2.mp4'];
+    const imageSources = ['1.jpg', '2.jpg'];
     const fakeData = [
       { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
       { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
@@ -171,17 +152,13 @@
       }
       streamBlock.classList.remove('hidden');
       currentIndex = 0;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      camFeed.play();
+      camImage.src = imageSources[currentIndex];
       updateFakeInfo(currentIndex);
     }
 
     function nextCamera() {
-      currentIndex = (currentIndex + 1) % videoSources.length;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      camFeed.play();
+      currentIndex = (currentIndex + 1) % imageSources.length;
+      camImage.src = imageSources[currentIndex];
       updateFakeInfo(currentIndex);
     }
 
@@ -191,9 +168,7 @@
 
     function disconnectCamera() {
       streamBlock.classList.add('hidden');
-      camFeed.pause();
-      camSource.src = '';
-      camFeed.load();
+      camImage.src = '';
       ipInput.value = '';
     }
   </script>
