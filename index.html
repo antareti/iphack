@@ -55,6 +55,17 @@
       border: 2px solid #0f0;
     }
 
+    .screenshot-images {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .screenshot-images img {
+      max-width: 300px;
+      border: 2px solid #0f0;
+    }
+
     .controls {
       margin-top: 10px;
     }
@@ -101,6 +112,10 @@
         <source id="camSource" src="" type="video/mp4" />
         Ваш браузер не поддерживает видео.
       </video>
+      <div class="screenshot-images">
+        <img src="1.jpg" alt="Камера 1" />
+        <img src="2.jpg" alt="Камера 2" />
+      </div>
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
         <button onclick="takeScreenshot()">Скриншот</button>
