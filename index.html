@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>iphack - Симулятор IP-камер</title>
   <style>
+    /* Твой CSS без изменений */
     body {
       background-color: #000;
       color: #0f0;
@@ -113,16 +114,16 @@
     const fakeActivity = document.getElementById('fakeActivity');
     const currentIP = document.getElementById('currentIP');
 
+    // Оставляем только 2 видео
     const videoSources = [
       'videos/1.mp4',
-      'videos/2.mp4',
-      'videos/3.mp4'
+      'videos/2.mp4'
     ];
 
+    // Соответствующие данные для двух видео
     const fakeData = [
       { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
-      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' },
-      { ip: '172.16.1.100', location: 'Владивосток, Россия', device: 'Reolink RLC-410', activity: 'Парковка, ночь' }
+      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
     ];
 
     let currentIndex = 0;
