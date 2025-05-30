@@ -48,6 +48,9 @@
       margin-top: 10px;
       border: 2px solid #0f0;
     }
+    .controls {
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -68,6 +71,7 @@
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
         <button onclick="takeScreenshot()">Скриншот</button>
+        <button onclick="disconnectCamera()">Отключиться</button>
       </div>
     </div>
 
@@ -79,6 +83,7 @@
   <script>
     const streamBlock = document.getElementById('stream');
     const camFeed = document.getElementById('camFeed');
+    const ipInput = document.getElementById('ipInput');
     const videoSources = [
       'videos/fake1.mp4',
       'videos/fake2.mp4',
@@ -87,7 +92,7 @@
     let currentIndex = 0;
 
     function connectCamera() {
-      const ip = document.getElementById('ipInput').value;
+      const ip = ipInput.value;
       if (ip.trim() === '') {
         alert('Введите IP-адрес камеры!');
         return;
@@ -105,6 +110,13 @@
 
     function takeScreenshot() {
       alert('Скриншот сохранён (фейк).');
+    }
+
+    function disconnectCamera() {
+      streamBlock.classList.add('hidden');
+      camFeed.pause();
+      camFeed.src = '';
+      ipInput.value = '';
     }
   </script>
 </body>
