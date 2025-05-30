@@ -51,6 +51,17 @@
     .controls {
       margin-top: 10px;
     }
+    .info {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #0f0;
+      background-color: #111;
+      padding: 10px;
+      border: 1px solid #0f0;
+    }
+    .info strong {
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -73,6 +84,12 @@
         <button onclick="takeScreenshot()">Скриншот</button>
         <button onclick="disconnectCamera()">Отключиться</button>
       </div>
+      <div class="info">
+        <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
+        <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
+        <p><strong>Устройство:</strong> <span id="fakeDevice">-</span></p>
+        <p><strong>Активность:</strong> <span id="fakeActivity">-</span></p>
+      </div>
     </div>
 
     <footer>
@@ -84,12 +101,32 @@
     const streamBlock = document.getElementById('stream');
     const camFeed = document.getElementById('camFeed');
     const ipInput = document.getElementById('ipInput');
+    const fakeIp = document.getElementById('fakeIp');
+    const fakeLocation = document.getElementById('fakeLocation');
+    const fakeDevice = document.getElementById('fakeDevice');
+    const fakeActivity = document.getElementById('fakeActivity');
+
     const videoSources = [
       'videos/fake1.mp4',
       'videos/fake2.mp4',
       'videos/fake3.mp4'
     ];
+
+    const fakeData = [
+      { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
+      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' },
+      { ip: '172.16.5.9', location: 'Минск, Беларусь', device: 'TP-Link NC450', activity: 'Гараж, вспышки света' }
+    ];
+
     let currentIndex = 0;
+
+    function updateFakeInfo(index) {
+      const data = fakeData[index];
+      fakeIp.textContent = data.ip;
+      fakeLocation.textContent = data.location;
+      fakeDevice.textContent = data.device;
+      fakeActivity.textContent = data.activity;
+    }
 
     function connectCamera() {
       const ip = ipInput.value;
@@ -100,12 +137,14 @@
       streamBlock.classList.remove('hidden');
       camFeed.src = videoSources[currentIndex];
       camFeed.load();
+      updateFakeInfo(currentIndex);
     }
 
     function nextCamera() {
       currentIndex = (currentIndex + 1) % videoSources.length;
       camFeed.src = videoSources[currentIndex];
       camFeed.load();
+      updateFakeInfo(currentIndex);
     }
 
     function takeScreenshot() {
