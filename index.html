@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iphack - Симулятор IP-камер</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 20px;
+    }
+    .console, #stream {
+      background: #111;
+      border: 1px solid #0f0;
+      padding: 10px;
+      margin-top: 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .status {
+      color: #0f0;
+    }
+    input[type="text"] {
+      background: #222;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 5px;
+    }
+    button {
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    video {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 10px;
+      border: 2px solid #0f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💀 iphack</h1>
+    <div class="console" id="console">
+      <p>> Введите IP-камеры:</p>
+      <input type="text" id="ipInput" placeholder="Например, 192.168.0.23">
+      <button onclick="connectCamera()">Подключиться</button>
+    </div>
+
+    <div id="stream" class="hidden">
+      <p class="status">[*] Подключение установлено...</p>
+      <video id="camFeed" autoplay muted loop>
+        <source src="videos/fake1.mp4" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+      </video>
+      <div class="controls">
+        <button onclick="nextCamera()">Следующая камера</button>
+        <button onclick="takeScreenshot()">Скриншот</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>iphack © 2025 — чисто визуальный фейк</p>
+    </footer>
+  </div>
+
+  <script>
+    const streamBlock = document.getElementById('stream');
+    const camFeed = document.getElementById('camFeed');
+    const videoSources = [
+      'videos/fake1.mp4',
+      'videos/fake2.mp4',
+      'videos/fake3.mp4'
+    ];
+    let currentIndex = 0;
+
+    function connectCamera() {
+      const ip = document.getElementById('ipInput').value;
+      if (ip.trim() === '') {
+        alert('Введите IP-адрес камеры!');
+        return;
+      }
+      streamBlock.classList.remove('hidden');
+      camFeed.src = videoSources[currentIndex];
+      camFeed.load();
+    }
+
+    function nextCamera() {
+      currentIndex = (currentIndex + 1) % videoSources.length;
+      camFeed.src = videoSources[currentIndex];
+      camFeed.load();
+    }
+
+    function takeScreenshot() {
+      alert('Скриншот сохранён (фейк).');
+    }
+  </script>
+</body>
+</html>
