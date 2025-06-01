@@ -5,24 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>iphack - Симулятор IP-камер</title>
   <style>
-    body {<body>
-  <!-- твой основной интерфейс -->
-
-  <div id="earnings" style="font-size:24px; margin-top:20px;">$0.00</div>
-  <button onclick="simulateEarnings()" style="font-size:18px;">Взломать и заработать</button>
-
-  <script>
-    let balance = 0;
-    function simulateEarnings() {
-      let gain = Math.random() * 50;
-      balance += gain;
-      document.getElementById("earnings").innerText = "$" + balance.toFixed(2);
-    }
-  </script>
-
-  <!-- остальная часть страницы -->
-</body>
-
+    body {
       margin: 0;
       padding: 0;
       font-family: monospace;
@@ -105,6 +88,11 @@
     audio {
       display: none;
     }
+
+    #earnings {
+      font-size: 20px;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -115,10 +103,19 @@
 
   <div class="overlay">
     <h1>💀 iphack</h1>
+
+    <!-- 📡 Ввод IP-камеры -->
     <div class="console">
       <p>> Введите IP-камеры:</p>
       <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
       <button onclick="connectCamera()">Подключиться</button>
+    </div>
+
+    <!-- 💰 Блок заработка -->
+    <div class="console">
+      <p>> Баланс:</p>
+      <div id="earnings">$0.00</div>
+      <button onclick="simulateEarnings()">Взломать и заработать</button>
     </div>
 
     <div id="stream" class="hidden">
@@ -164,6 +161,7 @@
     ];
 
     let currentIndex = 0;
+    let balance = 0;
 
     function updateFakeInfo(index) {
       const data = fakeData[index];
@@ -206,6 +204,12 @@
       camSource.src = '';
       camFeed.load();
       ipInput.value = '';
+    }
+
+    function simulateEarnings() {
+      let gain = Math.random() * 50;
+      balance += gain;
+      document.getElementById("earnings").innerText = "$" + balance.toFixed(2);
     }
   </script>
 </body>
