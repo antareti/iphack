@@ -22,6 +22,16 @@
 
     h1 {
       margin: 0;
+      animation: glitch 1s infinite;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
+      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
+      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
+      100% { text-shadow: 0 0 red, 0 0 cyan; }
     }
 
     .console, #stream {
@@ -29,6 +39,12 @@
       border: 1px solid #0f0;
       padding: 15px;
       margin-top: 20px;
+      animation: fadein 2s;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     input[type="text"] {
@@ -46,10 +62,12 @@
       padding: 5px 10px;
       margin-left: 5px;
       cursor: pointer;
+      transition: transform 0.2s;
     }
 
     button:hover {
       background: #0c0;
+      transform: scale(1.05);
     }
 
     video {
@@ -57,6 +75,12 @@
       max-width: 600px;
       margin-top: 10px;
       border: 2px solid #0f0;
+      animation: flicker 1s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
     }
 
     .controls {
@@ -109,21 +133,18 @@
   <div class="overlay">
     <h1>💀 iphack</h1>
 
-    <!-- 📡 Ввод IP-камеры -->
     <div class="console">
       <p>> Введите IP-камеры:</p>
       <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
       <button onclick="connectCamera()">Подключиться</button>
     </div>
 
-    <!-- 💰 Блок заработка -->
     <div class="console">
       <p>> Баланс:</p>
       <div id="earnings">$0.00</div>
       <button onclick="simulateEarnings()">Взломать и заработать</button>
     </div>
 
-    <!-- 💸 Поддержать проект TON-переводом -->
     <div class="console">
       <p>> 💸 Поддержать проект TON-переводом:</p>
       <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">
@@ -224,7 +245,7 @@
     function simulateEarnings() {
       let gain = Math.random() * 50;
       balance += gain;
-      document.getElementById("earnings").innerText = "$" + balance.toFixed(2);
+      document.getElementById('earnings').textContent = `$${balance.toFixed(2)}`;
     }
   </script>
 </body>
