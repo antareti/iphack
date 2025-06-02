@@ -453,5 +453,105 @@
       video.play();
     }
   </script>
+</body><!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPHack Simulator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background: radial-gradient(circle, #0d0d0d 0%, #000000 100%);
+      color: #00ff00;
+      overflow: hidden;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 30px;
+      animation: glitch 1s infinite alternate;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      100% { text-shadow: -2px 0 red, 2px 0 blue; }
+    }
+
+    .scanner {
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, transparent, #00ff00, transparent);
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .terminal {
+      padding: 20px;
+      font-size: 16px;
+      white-space: pre-line;
+      animation: fadein 2s ease-in;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .blinking {
+      animation: blink 1s step-start infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>IPHack Simulator</h1>
+  <div class="scanner"></div>
+  <div class="terminal" id="terminal"></div>
+  <script>
+    const terminal = document.getElementById("terminal");
+    const fakeLogs = [
+      "[+] Подключение к камере по IP: 192.168.1.101...",
+      "[+] Подключение установлено!",
+      "[+] Получение видеопотока...",
+      "[+] Видеопоток активен.",
+      "[+] Взлом успешен! Просмотр трансляции...",
+      "[!] Предупреждение: нестабильное соединение.",
+      "[+] Попытка восстановления потока..."
+    ];
+
+    let i = 0;
+    function typeLog() {
+      if (i < fakeLogs.length) {
+        const line = document.createElement("div");
+        line.textContent = fakeLogs[i];
+        terminal.appendChild(line);
+        terminal.scrollTop = terminal.scrollHeight;
+        i++;
+        setTimeout(typeLog, 1000);
+      } else {
+        const cursor = document.createElement("span");
+        cursor.classList.add("blinking");
+        cursor.textContent = "_";
+        terminal.appendChild(cursor);
+      }
+    }
+
+    typeLog();
+  </script>
 </body>
+
+</html>
+
 </html>
