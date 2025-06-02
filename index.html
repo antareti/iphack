@@ -2,455 +2,173 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iphack - Симулятор IP-камер</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IPHack Simulator</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: monospace;
+      background-color: black;
       color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.85);
-      min-height: 100vh;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
 
     h1 {
-      margin: 0;
-      animation: glitch 1s infinite;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #0f0;
     }
 
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
-      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
-      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
-      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
-      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
-      100% { text-shadow: 0 0 red, 0 0 cyan; }
-    }
-
-    .console, #stream {
-      background: #111;
+    .console {
+      background-color: #111;
       border: 1px solid #0f0;
-      padding: 15px;
-      margin-top: 20px;
-      animation: fadein 2s;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      padding: 20px;
+      width: 90%;
+      max-width: 800px;
     }
 
     input[type="text"] {
-      background: #222;
+      width: 100%;
+      padding: 10px;
+      background-color: black;
       color: #0f0;
       border: 1px solid #0f0;
-      padding: 5px;
-      width: 300px;
+      margin-bottom: 10px;
     }
 
     button {
-      background: #0f0;
-      color: #000;
-      border: none;
-      padding: 5px 10px;
-      margin-left: 5px;
+      background-color: black;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 10px;
       cursor: pointer;
-      transition: transform 0.2s;
     }
 
-    button:hover {
-      background: #0c0;
-      transform: scale(1.05);
+    .stream {
+      margin-top: 20px;
+      text-align: center;
     }
 
     video {
       width: 100%;
       max-width: 600px;
-      margin-top: 10px;
       border: 2px solid #0f0;
-      animation: flicker 1s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.95; }
-    }
-
-    .controls {
-      margin-top: 10px;
     }
 
     .info {
-      margin-top: 20px;
+      margin-top: 10px;
       font-size: 14px;
-      background-color: #111;
-      padding: 10px;
-      border: 1px solid #0f0;
-    }
-
-    .info strong {
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #0f0;
-    }
-
-    a {
-      color: #0f0;
-      font-weight: bold;
     }
 
     .hidden {
       display: none;
     }
 
-    audio {
-      display: none;
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1em;
+      background-color: #0f0;
+      margin-left: 5px;
+      animation: blink 1s step-end infinite;
     }
 
-    #earnings {
-      font-size: 20px;
-      margin-top: 5px;
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    #loader {
+      margin-top: 10px;
+      animation: fadein 1s;
+    }
+
+    @keyframes fadein {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      .console {
+        padding: 10px;
+      }
+
+      input[type="text"] {
+        font-size: 16px;
+      }
+
+      button {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="1.mp3" type="audio/mpeg" />
-    Ваш браузер не поддерживает аудио.
-  </audio>
-
-  <div class="overlay">
-    <h1>💀 iphack</h1>
-
-    <div class="console">
-      <p>> Введите IP-камеры:</p>
-      <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
-      <button onclick="connectCamera()">Подключиться</button>
-    </div>
-
-    <div class="console">
-      <p>> Баланс:</p>
-      <div id="earnings">$0.00</div>
-      <button onclick="simulateEarnings()">Взломать и заработать</button>
-    </div>
-
-    <div class="console">
-      <p>> 💸 Поддержать проект TON-переводом:</p>
-      <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">
-        📲 Отправить донат через Tonkeeper
-      </a>
-      <br /><br />
-      <button onclick="window.open('https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr', '_blank')">Оплатить</button>
-    </div>
-
-    <div id="stream" class="hidden">
-      <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
-      <video id="camFeed" autoplay muted loop>
-        <source id="camSource" src="" type="video/mp4" />
+  <h1>💀 IPHack Simulator 💀</h1>
+  <div class="console">
+    <p>> Введите IP-камеры:<span class="cursor"></span></p>
+    <input type="text" id="ipInput" placeholder="Пример: 192.168.0.101"/>
+    <button onclick="connectCamera()">📡 Подключиться</button>
+    <div class="stream hidden" id="streamBlock">
+      <video id="camFeed" controls autoplay loop muted>
+        <source id="camSource" src="" type="video/mp4"/>
         Ваш браузер не поддерживает видео.
       </video>
-      <div class="controls">
-        <button onclick="nextCamera()">Следующая камера</button>
-        <button onclick="takeScreenshot()">Скриншот</button>
-        <button onclick="disconnectCamera()">Отключиться</button>
-      </div>
       <div class="info">
-        <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
-        <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
-        <p><strong>Устройство:</strong> <span id="fakeDevice">-</span></p>
-        <p><strong>Активность:</strong> <span id="fakeActivity">-</span></p>
+        <p>📍 IP: <span id="currentIP">неизвестен</span></p>
+        <p>🎥 Камера: <span id="camName">неизвестно</span></p>
+        <p>🌐 Страна: <span id="camCountry">неизвестно</span></p>
+        <p>🏠 Адрес: <span id="camAddress">неизвестно</span></p>
       </div>
+      <div id="loader">[*] Загрузка потока<span class="dots">...</span></div>
     </div>
-
-    <footer>
-      <p>iphack © 2025 — чисто визуальный реально</p>
-      <p><a href="https://t.me/vipcam1977" target="_blank">Обратная связь</a></p>
-    </footer>
   </div>
 
   <script>
-    const streamBlock = document.getElementById('stream');
-    const camFeed = document.getElementById('camFeed');
-    const camSource = document.getElementById('camSource');
-    const ipInput = document.getElementById('ipInput');
-    const fakeIp = document.getElementById('fakeIp');
-    const fakeLocation = document.getElementById('fakeLocation');
-    const fakeDevice = document.getElementById('fakeDevice');
-    const fakeActivity = document.getElementById('fakeActivity');
-    const currentIP = document.getElementById('currentIP');
+    const ipInput = document.getElementById("ipInput");
+    const streamBlock = document.getElementById("streamBlock");
+    const camFeed = document.getElementById("camFeed");
+    const camSource = document.getElementById("camSource");
+    const currentIP = document.getElementById("currentIP");
+    const camName = document.getElementById("camName");
+    const camCountry = document.getElementById("camCountry");
+    const camAddress = document.getElementById("camAddress");
 
-    const videoSources = ['14.mp4', '15.mp4'];
     const fakeData = [
-      { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
-      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
+      {
+        ip: "93.184.216.34",
+        name: "Dahua IPC-HDW1230S",
+        country: "Россия",
+        address: "Москва, ул. Ленина, д. 1",
+        video: "https://www.w3schools.com/html/mov_bbb.mp4"
+      },
+      {
+        ip: "203.0.113.12",
+        name: "Hikvision DS-2CD1023G0",
+        country: "Германия",
+        address: "Берлин, Hauptstrasse 5",
+        video: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
+      },
     ];
 
     let currentIndex = 0;
-    let balance = 0;
-
-    function updateFakeInfo(index) {
-      const data = fakeData[index];
-      fakeIp.textContent = data.ip;
-      fakeLocation.textContent = data.location;
-      fakeDevice.textContent = data.device;
-      fakeActivity.textContent = data.activity;
-      currentIP.textContent = data.ip;
-    }
 
     function connectCamera() {
-      const ip = ipInput.value.trim();
-      if (!ip) {
-        alert('Введите IP-адрес камеры!');
-        return;
-      }
-      streamBlock.classList.remove('hidden');
-      currentIndex = 0;
-      camSource.src = videoSources[currentIndex];
+      const ip = ipInput.value || fakeData[currentIndex].ip;
+      currentIP.textContent = ip;
+      camName.textContent = fakeData[currentIndex].name;
+      camCountry.textContent = fakeData[currentIndex].country;
+      camAddress.textContent = fakeData[currentIndex].address;
+      camSource.src = fakeData[currentIndex].video;
       camFeed.load();
-      camFeed.play();
-      updateFakeInfo(currentIndex);
-    }
 
-    function nextCamera() {
-      currentIndex = (currentIndex + 1) % videoSources.length;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      camFeed.play();
-      updateFakeInfo(currentIndex);
-    }
+      streamBlock.classList.remove("hidden");
+      document.getElementById("loader").classList.remove("hidden");
 
-    function takeScreenshot() {
-      alert('Скриншот сохранён (фейк).');
-    }
-
-    function disconnectCamera() {
-      streamBlock.classList.add('hidden');
-      camFeed.pause();
-      camSource.src = '';
-      camFeed.load();
-      ipInput.value = '';
-    }
-
-    function simulateEarnings() {
-      let gain = Math.random() * 50;
-      balance += gain;
-      document.getElementById('earnings').textContent = `$${balance.toFixed(2)}`;
-    }
-  </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iphack - Симулятор IP-камер</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: monospace;
-      color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.85);
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    h1 {
-      margin: 0;
-      animation: glitch 1s infinite;
-    }
-
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
-      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
-      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
-      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
-      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
-      100% { text-shadow: 0 0 red, 0 0 cyan; }
-    }
-
-    .console, #stream {
-      background: #111;
-      border: 1px solid #0f0;
-      padding: 15px;
-      margin-top: 20px;
-      animation: fadein 2s;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    input[type="text"] {
-      background: #222;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 5px;
-      width: 300px;
-    }
-
-    button {
-      background: #0f0;
-      color: #000;
-      border: none;
-      padding: 5px 10px;
-      margin-left: 5px;
-      cursor: pointer;
-      transition: transform 0.2s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::after {
-      content: "";
-      position: absolute;
-      width: 200%;
-      height: 200%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: radial-gradient(circle, red, orange, yellow, transparent);
-      opacity: 0.7;
-      border-radius: 50%;
-      pointer-events: none;
-      animation: none;
-    }
-
-    button:active::after {
-      animation: explode 0.5s ease-out;
-    }
-
-    @keyframes explode {
-      0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(-50%, -50%) scale(3);
-        opacity: 0;
-      }
-    }
-
-    button:hover {
-      background: #0c0;
-      transform: scale(1.05);
-    }
-
-    video {
-      width: 100%;
-      max-width: 600px;
-      margin-top: 10px;
-      border: 2px solid #0f0;
-      animation: flicker 1s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.95; }
-    }
-
-    .controls {
-      margin-top: 10px;
-    }
-
-    .info {
-      margin-top: 20px;
-      font-size: 14px;
-      background-color: #111;
-      padding: 10px;
-      border: 1px solid #0f0;
-    }
-
-    .info strong {
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #0f0;
-    }
-
-    a {
-      color: #0f0;
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    audio {
-      display: none;
-    }
-
-    #earnings {
-      font-size: 20px;
-      margin-top: 5px;
-    }
-  </style>
-</head>
-<body>
-  <div class="overlay">
-    <h1>iphack - Взлом IP-камер</h1>
-    <div class="console">
-      <label for="ip">Введите IP-адрес:</label>
-      <input type="text" id="ip" placeholder="192.168.0.1">
-      <button onclick="connect()">Подключиться</button>
-    </div>
-
-    <div id="stream" class="hidden">
-      <h2>Трансляция</h2>
-      <video id="video" autoplay muted loop>
-        <source id="videoSource" src="cam.mp4" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-      </video>
-
-      <div class="info" id="cam-info">
-        <strong>IP:</strong> <span id="ip-info"></span><br>
-        <strong>Местоположение:</strong> <span id="location"></span><br>
-        <strong>Устройство:</strong> <span id="device"></span>
-      </div>
-    </div>
-  </div>
-  <script>
-    let videoToggle = false;
-
-    function connect() {
-      const ip = document.getElementById("ip").value;
-      if (!ip) return alert("Введите IP-адрес!");
-
-      document.getElementById("ip-info").textContent = ip;
-      document.getElementById("location").textContent = "Стамбул, Турция";
-      document.getElementById("device").textContent = "Dahua IPC-HFW1230S";
-
-      document.getElementById("stream").classList.remove("hidden");
-
-      const video = document.getElementById("video");
-      const source = document.getElementById("videoSource");
-
-      videoToggle = !videoToggle;
-      source.src = videoToggle ? "cam2.mp4" : "cam.mp4";
-
-      video.load();
-      video.play();
+      setTimeout(() => {
+        document.getElementById("loader").classList.add("hidden");
+        currentIndex = (currentIndex + 1) % fakeData.length;
+      }, 2000);
     }
   </script>
 </body>
