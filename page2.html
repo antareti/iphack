@@ -2,39 +2,136 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>iphack - Инструкция</title>
+  <title>IPHack</title>
   <style>
     body {
-      background: black;
-      color: #0f0;
-      font-family: monospace;
-      padding: 20px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+      background-color: black;
+      color: #00ff00;
+      overflow: hidden;
     }
-    a {
-      color: #0f0;
-      text-decoration: underline;
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
     }
-    .back {
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 100px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .typewriter {
+      font-size: 32px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #00ff00;
+      width: 0;
+      animation: typing 4s steps(30, end) forwards, blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 20ch; }
+    }
+
+    @keyframes blink-caret {
+      50% { border-color: transparent; }
+    }
+
+    input, button {
+      background-color: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
       margin-top: 20px;
-      display: inline-block;
-      background: #0f0;
-      color: black;
-      padding: 5px 10px;
-      text-decoration: none;
+      transition: all 0.2s ease-in-out;
+    }
+
+    input:hover, button:hover {
+      box-shadow: 0 0 10px #00ff00;
+      transform: scale(1.05);
+    }
+
+    button:active {
+      transform: scale(0.95);
+      background-color: #003300;
+    }
+
+    #log {
+      margin-top: 20px;
+      max-width: 600px;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border: 1px solid #00ff00;
+      box-shadow: 0 0 10px #00ff00;
     }
   </style>
 </head>
 <body>
-  <h1>📜 Инструкция по использованию iphack</h1>
-  <p>Этот симулятор предназначен только для развлекательных целей. Все камеры и IP — фейковые.</p>
-  <ul>
-    <li>Введите IP-адрес, например <code>192.168.0.23</code></li>
-    <li>Нажмите кнопку <strong>Подключиться</strong></li>
-    <li>Смотрите "трансляцию", изучайте данные</li>
-    <li>Нажмите <strong>Взломать и заработать</strong> — баланс увеличится</li>
-  </ul>
 
-  <a href="index.html" class="back">⬅ Вернуться назад</a>
+<canvas id="matrix"></canvas>
+
+<div class="container">
+  <div class="typewriter">IPHack: виртуальный взлом</div>
+
+  <input type="text" id="ipInput" placeholder="Введите IP (например, 192.168.0.101)">
+  <button onclick="connect()">Подключиться</button>
+  <div id="log"></div>
+</div>
+
+<script>
+  function connect() {
+    const ip = document.getElementById('ipInput').value;
+    const log = document.getElementById('log');
+    log.innerHTML += `> Подключение к ${ip}...<br>`;
+    setTimeout(() => {
+      log.innerHTML += `> Камера найдена...<br>`;
+      setTimeout(() => {
+        log.innerHTML += `> Взлом выполнен успешно!<br>`;
+      }, 2000);
+    }, 1000);
+  }
+
+  // Matrix Background Animation
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  const letters = '01';
+  const fontSize = 14;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#0F0';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters.charAt(Math.floor(Math.random() * letters.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+
+      drops[i]++;
+    }
+  }
+
+  setInterval(draw, 33);
+</script>
+
 </body>
 </html>
