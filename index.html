@@ -1,147 +1,93 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iphack - Симулятор IP-камер</title>
+  <title>IPHack - Хакерская камера</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: monospace;
-      color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
+      background: black url('200.gif') center center fixed;
       background-size: cover;
-      overflow-x: hidden;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.85);
-      min-height: 100vh;
-      padding: 20px;
-      animation: fadein 1s;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     h1 {
-      margin: 0;
-      animation: glitch 1s infinite;
       text-align: center;
       font-size: 3em;
+      color: #00ff00;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      animation: glitch 1s infinite;
+      margin-top: 40px;
     }
 
     @keyframes glitch {
-      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
-      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
-      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
-      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
-      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
-      100% { text-shadow: 0 0 red, 0 0 cyan; }
+      0% { text-shadow: 2px 0 red, -2px 0 blue; }
+      20% { text-shadow: -2px 0 red, 2px 0 blue; }
+      40% { text-shadow: 2px 2px red, -2px -2px blue; }
+      60% { text-shadow: -1px 1px red, 1px -1px blue; }
+      80% { text-shadow: 1px -1px red, -1px 1px blue; }
+      100% { text-shadow: 0 0 5px #0f0, 0 0 10px #0f0; }
     }
 
-    .console, #stream {
-      background: #111;
-      border: 1px solid #0f0;
-      padding: 15px;
+    .container {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      box-shadow: 0 0 15px #00ff00;
       margin-top: 20px;
-      animation: slideUp 0.7s ease-out;
     }
 
-    @keyframes slideUp {
-      from { transform: translateY(40px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    input[type="text"] {
-      background: #222;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 5px;
-      width: 300px;
-      transition: box-shadow 0.2s;
-    }
-
-    input[type="text"]:focus {
-      box-shadow: 0 0 5px #0f0;
-      outline: none;
-    }
-
-    button {
-      background: #0f0;
-      color: #000;
-      border: none;
-      padding: 5px 10px;
-      margin-left: 5px;
-      cursor: pointer;
-      transition: transform 0.2s, background 0.2s;
-    }
-
-    button:hover {
-      background: #0c0;
-      transform: scale(1.05);
+    input, button {
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     video {
       width: 100%;
-      max-width: 600px;
-      margin-top: 10px;
-      border: 2px solid #0f0;
-      animation: flicker 1s infinite;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.95; }
-    }
-
-    .controls {
-      margin-top: 10px;
-    }
-
-    .info {
       margin-top: 20px;
-      font-size: 14px;
-      background-color: #111;
+      border: 1px solid #00ff00;
+    }
+
+    #output {
+      white-space: pre-line;
+      background: #000;
       padding: 10px;
-      border: 1px solid #0f0;
-    }
-
-    .info strong {
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #0f0;
-      animation: fadein 2s;
-    }
-
-    a {
-      color: #0f0;
-      font-weight: bold;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    audio {
-      display: none;
-    }
-
-    #earnings {
-      font-size: 20px;
-      margin-top: 5px;
-      animation: pulse 1.5s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { color: #0f0; }
-      50% { color: #6f6; }
+      border: 1px solid #00ff00;
+      margin-top: 20px;
+      height: 150px;
+      overflow-y: auto;
     }
   </style>
 </head>
 <body>
-  <!-- JavaScript должен быть завершён, добавь event listeners, simulateEarnings(), connectCamera() и другие -->
+  <h1>IPHACK</h1>
+  <div class="container">
+    <input type="text" id="ipInput" placeholder="Введите IP адрес">
+    <button onclick="fakeHack()">Взломать IP</button>
+    <div id="output">Ожидание команды...</div>
+    <video id="camera" controls autoplay loop muted style="display: none;">
+      <source src="camera.mp4" type="video/mp4" />
+      Ваш браузер не поддерживает видео.
+    </video>
+  </div>
+
+  <script>
+    function fakeHack() {
+      const output = document.getElementById("output");
+      const camera = document.getElementById("camera");
+      output.innerText = "Подключение к IP...\nПолучение доступа...\nАутентификация...\nУспешно!";
+      camera.style.display = "block";
+    }
+  </script>
 </body>
 </html>
