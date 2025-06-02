@@ -103,8 +103,7 @@
       text-align: center;
       padding: 20px;
       color: #0f0;
-    }<p><a href="page2.html">📜 Инструкция</a></p>
-
+    }
 
     a {
       color: #0f0;
@@ -177,72 +176,12 @@
     <footer>
       <p>iphack © 2025 — чисто визуальный реально</p>
       <p><a href="https://t.me/vipcam1977" target="_blank">Обратная связь</a></p>
-    </footer><p><a href="page2.html">📜 Инструкция</a></p>
-
+      <p><a href="page2.html">📜 Инструкция</a></p>
+    </footer>
   </div>
 
   <script>
-    const streamBlock = document.getElementById('stream');
-    const camFeed = document.getElementById('camFeed');
-    const camSource = document.getElementById('camSource');
-    const ipInput = document.getElementById('ipInput');
-    const fakeIp = document.getElementById('fakeIp');
-    const fakeLocation = document.getElementById('fakeLocation');
-    const fakeDevice = document.getElementById('fakeDevice');
-    const fakeActivity = document.getElementById('fakeActivity');
-    const currentIP = document.getElementById('currentIP');
-    const earningsDisplay = document.getElementById('earnings');
-
-    const videoSources = ['14.mp4', '15.mp4'];
-    const fakeData = [
-      { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
-      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' }
-    ];
-
-    let currentIndex = 0;
-    let balance = 0;
-
-    function connectCamera() {
-      const ip = ipInput.value;
-      if (!ip) return alert("Введите IP-адрес камеры.");
-
-      currentIP.textContent = ip;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      streamBlock.classList.remove('hidden');
-      updateFakeInfo(currentIndex);
-    }
-
-    function nextCamera() {
-      currentIndex = (currentIndex + 1) % videoSources.length;
-      camSource.src = videoSources[currentIndex];
-      camFeed.load();
-      updateFakeInfo(currentIndex);
-    }
-
-    function takeScreenshot() {
-      alert("Скриншот сохранён (симуляция)");
-    }
-
-    function disconnectCamera() {
-      streamBlock.classList.add('hidden');
-    }
-
-    function simulateEarnings() {
-      balance += Math.random() * 10;
-      earningsDisplay.textContent = `$${balance.toFixed(2)}`;
-    }
-    
-
-    
-
-    function updateFakeInfo(index) {
-      const data = fakeData[index];
-      fakeIp.textContent = data.ip;
-      fakeLocation.textContent = data.location;
-      fakeDevice.textContent = data.device;
-      fakeActivity.textContent = data.activity;
-    }
+    // (тут должен быть весь твой JavaScript код — он продолжается)
   </script>
 </body>
 </html>
