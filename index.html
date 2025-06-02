@@ -2,174 +2,146 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IPHack Simulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>iphack - Симулятор IP-камер</title>
   <style>
     body {
-      background-color: black;
-      color: #0f0;
+      margin: 0;
+      padding: 0;
       font-family: monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      color: #0f0;
+      background: url("200.gif") no-repeat center center fixed;
+      background-size: cover;
+      overflow-x: hidden;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.85);
+      min-height: 100vh;
       padding: 20px;
+      animation: fadein 1s;
     }
 
     h1 {
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #0f0;
+      margin: 0;
+      animation: glitch 1s infinite;
+      text-align: center;
+      font-size: 3em;
     }
 
-    .console {
-      background-color: #111;
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
+      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
+      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
+      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
+      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
+      100% { text-shadow: 0 0 red, 0 0 cyan; }
+    }
+
+    .console, #stream {
+      background: #111;
       border: 1px solid #0f0;
-      padding: 20px;
-      width: 90%;
-      max-width: 800px;
+      padding: 15px;
+      margin-top: 20px;
+      animation: slideUp 0.7s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      background-color: black;
+      background: #222;
       color: #0f0;
       border: 1px solid #0f0;
-      margin-bottom: 10px;
+      padding: 5px;
+      width: 300px;
+      transition: box-shadow 0.2s;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 5px #0f0;
+      outline: none;
     }
 
     button {
-      background-color: black;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 10px;
+      background: #0f0;
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      margin-left: 5px;
       cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
     }
 
-    .stream {
-      margin-top: 20px;
-      text-align: center;
+    button:hover {
+      background: #0c0;
+      transform: scale(1.05);
     }
 
     video {
       width: 100%;
       max-width: 600px;
+      margin-top: 10px;
       border: 2px solid #0f0;
+      animation: flicker 1s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.95; }
+    }
+
+    .controls {
+      margin-top: 10px;
     }
 
     .info {
-      margin-top: 10px;
+      margin-top: 20px;
       font-size: 14px;
+      background-color: #111;
+      padding: 10px;
+      border: 1px solid #0f0;
+    }
+
+    .info strong {
+      color: #fff;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #0f0;
+      animation: fadein 2s;
+    }
+
+    a {
+      color: #0f0;
+      font-weight: bold;
     }
 
     .hidden {
       display: none;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      height: 1em;
-      background-color: #0f0;
-      margin-left: 5px;
-      animation: blink 1s step-end infinite;
+    audio {
+      display: none;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
+    #earnings {
+      font-size: 20px;
+      margin-top: 5px;
+      animation: pulse 1.5s infinite;
     }
 
-    #loader {
-      margin-top: 10px;
-      animation: fadein 1s;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      .console {
-        padding: 10px;
-      }
-
-      input[type="text"] {
-        font-size: 16px;
-      }
-
-      button {
-        font-size: 16px;
-      }
+    @keyframes pulse {
+      0%, 100% { color: #0f0; }
+      50% { color: #6f6; }
     }
   </style>
 </head>
 <body>
-  <h1>💀 IPHack Simulator 💀</h1>
-  <div class="console">
-    <p>> Введите IP-камеры:<span class="cursor"></span></p>
-    <input type="text" id="ipInput" placeholder="Пример: 192.168.0.101"/>
-    <button onclick="connectCamera()">📡 Подключиться</button>
-    <div class="stream hidden" id="streamBlock">
-      <video id="camFeed" controls autoplay loop muted>
-        <source id="camSource" src="" type="video/mp4"/>
-        Ваш браузер не поддерживает видео.
-      </video>
-      <div class="info">
-        <p>📍 IP: <span id="currentIP">неизвестен</span></p>
-        <p>🎥 Камера: <span id="camName">неизвестно</span></p>
-        <p>🌐 Страна: <span id="camCountry">неизвестно</span></p>
-        <p>🏠 Адрес: <span id="camAddress">неизвестно</span></p>
-      </div>
-      <div id="loader">[*] Загрузка потока<span class="dots">...</span></div>
-    </div>
-  </div>
-
-  <script>
-    const ipInput = document.getElementById("ipInput");
-    const streamBlock = document.getElementById("streamBlock");
-    const camFeed = document.getElementById("camFeed");
-    const camSource = document.getElementById("camSource");
-    const currentIP = document.getElementById("currentIP");
-    const camName = document.getElementById("camName");
-    const camCountry = document.getElementById("camCountry");
-    const camAddress = document.getElementById("camAddress");
-
-    const fakeData = [
-      {
-        ip: "93.184.216.34",
-        name: "Dahua IPC-HDW1230S",
-        country: "Россия",
-        address: "Москва, ул. Ленина, д. 1",
-        video: "https://www.w3schools.com/html/mov_bbb.mp4"
-      },
-      {
-        ip: "203.0.113.12",
-        name: "Hikvision DS-2CD1023G0",
-        country: "Германия",
-        address: "Берлин, Hauptstrasse 5",
-        video: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4"
-      },
-    ];
-
-    let currentIndex = 0;
-
-    function connectCamera() {
-      const ip = ipInput.value || fakeData[currentIndex].ip;
-      currentIP.textContent = ip;
-      camName.textContent = fakeData[currentIndex].name;
-      camCountry.textContent = fakeData[currentIndex].country;
-      camAddress.textContent = fakeData[currentIndex].address;
-      camSource.src = fakeData[currentIndex].video;
-      camFeed.load();
-
-      streamBlock.classList.remove("hidden");
-      document.getElementById("loader").classList.remove("hidden");
-
-      setTimeout(() => {
-        document.getElementById("loader").classList.add("hidden");
-        currentIndex = (currentIndex + 1) % fakeData.length;
-      }, 2000);
-    }
-  </script>
+  <!-- JavaScript должен быть завершён, добавь event listeners, simulateEarnings(), connectCamera() и другие -->
 </body>
 </html>
