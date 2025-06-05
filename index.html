@@ -1,204 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>iphack - ВЗЛОМЕР IP-камер</title>
+  <meta charset="UTF-8">
+  <title>IP Hack Simulator</title>
   <style>
     body {
-      margin: 0;
-      padding: 0;
-      font-family: monospace;
-      color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
-      background-size: cover;
-      overflow-x: hidden;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.88);
-      min-height: 100vh;
-      padding: 20px;
-      box-shadow: inset 0 0 20px #0f0;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 1.8em;
-      animation: glitch 1s infinite steps(2, end);
-      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
-      border-left: 5px solid #0f0;
-      padding-left: 10px;
-    }
-
-    @keyframes glitch {
-      0% { transform: translate(0); }
-      20% { transform: translate(-2px, 1px); }
-      40% { transform: translate(2px, -1px); }
-      60% { transform: translate(-1px, 2px); }
-      80% { transform: translate(1px, -2px); }
-      100% { transform: translate(0); }
-    }
-
-    .console, #stream {
-      background: #0a0a0a;
-      border: 1px solid #0f0;
-      padding: 15px;
-      margin-top: 20px;
-      box-shadow: 0 0 10px #0f0;
-      animation: fadein 1s ease-in;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    input[type="text"] {
-      background: #111;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 8px;
-      width: 280px;
-      font-family: monospace;
-    }
-
-    button {
-      background: #0f0;
-      color: #000;
-      border: none;
-      padding: 6px 12px;
-      font-weight: bold;
-      font-family: monospace;
-      margin-top: 8px;
-      margin-left: 5px;
-      cursor: pointer;
-      transition: all 0.2s ease-in-out;
-    }
-
-    button:hover {
-      background: #0c0;
-      transform: scale(1.07);
-    }
-
-    video, img {
-      width: 100%;
-      max-width: 600px;
-      border: 2px solid #0f0;
-      animation: flicker 1.2s infinite;
-      margin-top: 10px;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.9; }
-    }
-
-    .controls {
-      margin-top: 10px;
-    }
-
-    .info {
-      margin-top: 20px;
-      background-color: #111;
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #0f0;
-    }
-
-    .info p, .info strong {
-      margin: 5px 0;
-    }
-
-    footer {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #00ff00;
       text-align: center;
-      padding: 20px;
-      color: #0f0;
-      font-size: 14px;
+      padding: 30px;
     }
-
-    a {
-      color: #0f0;
-      text-decoration: none;
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
     }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
     .hidden {
       display: none;
     }
-
-    audio {
-      display: none;
-    }
-
-    #earnings {
-      font-size: 22px;
-      color: #fff;
-      margin-top: 5px;
-      text-shadow: 0 0 5px #0f0;
+    #streamBlock video, #streamBlock img {
+      width: 500px;
+      height: auto;
+      margin: 20px 0;
+      border: 2px solid #00ff00;
     }
   </style>
 </head>
 <body>
-  <audio autoplay loop>
-    <source src="1.mp3" type="audio/mpeg" />
-  </audio>
+  <h1>Взлом IP-Камеры</h1>
+  <input type="text" id="ipInput" placeholder="Введите IP камеры">
+  <button onclick="connectCamera()">Подключиться</button>
+  <button onclick="nextCamera()">Следующая камера</button>
+  <button onclick="disconnectCamera()">Отключиться</button>
+  <button onclick="takeScreenshot()">Скриншот</button>
+  <button onclick="simulateEarnings()">Заработать</button>
 
-  <div class="overlay">
-    <h1>💀📡 ВЗЛОМЕР IP-КАМЕР — iphack</h1>
-
-    <div class="console">
-      <p>> Введите IP-камеру:</p>
-      <input type="text" id="ipInput" placeholder="Например, 192.168.0.23" />
-      <button onclick="connectCamera()">Подключиться</button>
-    </div>
-
-    <div class="console">
-      <p>> 💰 Баланс:</p>
-      <div id="earnings">$0.00</div>
-      <button onclick="simulateEarnings()">Взломать и заработать</button>
-    </div>
-
-    <div class="console">
-      <p>> 💸 Поддержать проект TON-переводом:</p>
-      <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">
-        📲 Отправить донат через Tonkeeper
-      </a>
-      <br />
-      <button onclick="window.open('https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr', '_blank')">Оплатить</button>
-    </div>
-
-    <div id="stream" class="hidden">
-      <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
-      <video id="camVideo" autoplay muted loop class="hidden">
-        <source id="camVideoSource" src="" type="video/mp4" />
-      </video>
-      <img id="camGif" src="" alt="Камера GIF" class="hidden" />
-
-      <div class="controls">
-        <button onclick="nextCamera()">Следующая камера</button>
-        <button onclick="takeScreenshot()">Скриншот</button>
-        <button onclick="disconnectCamera()">Отключиться</button>
-      </div>
-
-      <div class="info">
-        <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
-        <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
-        <p><strong>Устройство:</strong> <span id="fakeDevice">-</span></p>
-        <p><strong>Активность:</strong> <span id="fakeActivity">-</span></p>
-      </div>
-    </div>
-
-    <footer>
-      <p>iphack © 2025 — только визуальный эффект</p>
-      <p><a href="https://t.me/vipcam1977" target="_blank">📩 Обратная связь</a></p>
-      <p><a href="page2.html">📜 Инструкция</a></p>
-    </footer>
+  <div id="streamBlock" class="hidden">
+    <p><strong>Текущий IP:</strong> <span id="currentIP"></span></p>
+    <p><strong>IP:</strong> <span id="fakeIp"></span></p>
+    <p><strong>Местоположение:</strong> <span id="fakeLocation"></span></p>
+    <p><strong>Устройство:</strong> <span id="fakeDevice"></span></p>
+    <p><strong>Активность:</strong> <span id="fakeActivity"></span></p>
+    <video id="camVideo" controls class="hidden">
+      <source id="camVideoSource" src="" type="video/mp4">
+      Ваш браузер не поддерживает видео.
+    </video>
+    <img id="camGif" src="" class="hidden">
+    <p>💰 Заработано: <span id="earnings">$0.00</span></p>
   </div>
 
-  <!-- JavaScript логика подгрузки камеры и дохода (оставить как было) -->
+  <audio id="audioPlayer" autoplay loop>
+    <source src="1.mp3" type="audio/mp3">
+    Ваш браузер не поддерживает аудио.
+  </audio>
+
+  <script>
+    const ipInput = document.getElementById('ipInput');
+    const currentIP = document.getElementById('currentIP');
+    const fakeIp = document.getElementById('fakeIp');
+    const fakeLocation = document.getElementById('fakeLocation');
+    const fakeDevice = document.getElementById('fakeDevice');
+    const fakeActivity = document.getElementById('fakeActivity');
+    const camVideo = document.getElementById('camVideo');
+    const camVideoSource = document.getElementById('camVideoSource');
+    const camGif = document.getElementById('camGif');
+    const streamBlock = document.getElementById('streamBlock');
+    const earningsDisplay = document.getElementById('earnings');
+
+    const cameraSources = [
+      { type: 'video', src: '14.mp4' },
+      { type: 'video', src: '15.mp4' },
+      { type: 'gif', src: '15.gif' },
+      { type: 'gif', src: '200.gif' }
+    ];
+
+    const fakeData = [
+      { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
+      { ip: '77.88.8.8', location: 'СПб, Россия', device: 'HikVision DS-2CD', activity: 'Парковка, авто' },
+      { ip: '10.0.0.5', location: 'Новосибирск', device: 'Reolink Argus', activity: 'Лестница, движение' },
+      { ip: '172.16.1.1', location: 'Казань', device: 'TP-Link Cam', activity: 'Гараж, свет' }
+    ];
+
+    let currentCam = 0;
+
+    function connectCamera() {
+      const ip = ipInput.value || fakeData[currentCam].ip;
+      currentIP.textContent = ip;
+      fakeIp.textContent = fakeData[currentCam].ip;
+      fakeLocation.textContent = fakeData[currentCam].location;
+      fakeDevice.textContent = fakeData[currentCam].device;
+      fakeActivity.textContent = fakeData[currentCam].activity;
+
+      const cam = cameraSources[currentCam];
+      if (cam.type === 'video') {
+        camVideoSource.src = cam.src;
+        camVideo.load();
+        camVideo.classList.remove('hidden');
+        camGif.classList.add('hidden');
+      } else {
+        camGif.src = cam.src;
+        camGif.classList.remove('hidden');
+        camVideo.classList.add('hidden');
+        camVideo.pause();
+      }
+
+      streamBlock.classList.remove('hidden');
+    }
+
+    function nextCamera() {
+      currentCam = (currentCam + 1) % cameraSources.length;
+      connectCamera();
+    }
+
+    function disconnectCamera() {
+      streamBlock.classList.add('hidden');
+      camVideo.pause();
+    }
+
+    function takeScreenshot() {
+      alert('Скриншот сохранён (на самом деле нет)');
+    }
+
+    function simulateEarnings() {
+      let amount = Math.random() * 10 + 1;
+      let current = parseFloat(earningsDisplay.textContent.replace('$', ''));
+      earningsDisplay.textContent = `$${(current + amount).toFixed(2)}`;
+    }
+  </script>
 </body>
 </html>
