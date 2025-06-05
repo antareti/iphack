@@ -10,7 +10,7 @@
       padding: 0;
       font-family: monospace;
       color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
+      background: url("9.png") no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -173,7 +173,6 @@
         <source id="camVideoSource" src="" type="video/mp4" />
         Ваш браузер не поддерживает видео.
       </video>
-
       <img id="camGif" src="" alt="Камера GIF" class="hidden" />
 
       <div class="controls">
@@ -181,7 +180,6 @@
         <button onclick="takeScreenshot()">Скриншот</button>
         <button onclick="disconnectCamera()">Отключиться</button>
       </div>
-
       <div class="info">
         <p><strong>IP:</strong> <span id="fakeIp">-</span></p>
         <p><strong>Местоположение:</strong> <span id="fakeLocation">-</span></p>
@@ -203,6 +201,7 @@
     const camVideo = document.getElementById('camVideo');
     const camVideoSource = document.getElementById('camVideoSource');
     const camGif = document.getElementById('camGif');
+
     const ipInput = document.getElementById('ipInput');
     const fakeIp = document.getElementById('fakeIp');
     const fakeLocation = document.getElementById('fakeLocation');
@@ -211,7 +210,63 @@
     const currentIP = document.getElementById('currentIP');
     const earningsDisplay = document.getElementById('earnings');
 
-    // Добавь сюда массив камер и остальной JS-код...
+    const cameraSources = [
+      { type: 'video', src: '14.mp4' },
+      { type: 'video', src: '15.mp4' },
+      { type: 'gif', src: '16.gif' }
+    ];
+    let currentCameraIndex = 0;
+    let earnings = 0;
+
+    function connectCamera() {
+      const ip = ipInput.value || '192.168.0.1';
+      currentIP.textContent = ip;
+      fakeIp.textContent = ip;
+      fakeLocation.textContent = 'Тбилиси, Грузия';
+      fakeDevice.textContent = 'HiWatch DS-i121';
+      fakeActivity.textContent = 'Потоковое вещание';
+
+      streamBlock.classList.remove('hidden');
+      showCamera();
+    }
+
+    function showCamera() {
+      const cam = cameraSources[currentCameraIndex];
+
+      camVideo.classList.add('hidden');
+      camGif.classList.add('hidden');
+
+      if (cam.type === 'video') {
+        camVideoSource.src = cam.src;
+        camVideo.load();
+        camVideo.classList.remove('hidden');
+      } else {
+        camGif.src = cam.src;
+        camGif.classList.remove('hidden');
+      }
+    }
+
+    function nextCamera() {
+      currentCameraIndex = (currentCameraIndex + 1) % cameraSources.length;
+      showCamera();
+    }
+
+    function disconnectCamera() {
+      streamBlock.classList.add('hidden');
+      camVideo.pause();
+      camVideoSource.src = '';
+      camGif.src = '';
+    }
+
+    function takeScreenshot() {
+      alert('Скриншот сделан (на самом деле нет)');
+    }
+
+    function simulateEarnings() {
+      const earned = (Math.random() * 10 + 1).toFixed(2);
+      earnings += parseFloat(earned);
+      earningsDisplay.textContent = `$${earnings.toFixed(2)}`;
+    }
   </script>
 </body>
 </html>
