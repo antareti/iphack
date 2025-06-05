@@ -10,7 +10,7 @@
       padding: 0;
       font-family: monospace;
       color: #0f0;
-      background: url("9.png") no-repeat center center fixed;
+      background: url("200.gif") no-repeat center center fixed;
       background-size: cover;
     }
 
@@ -55,7 +55,7 @@
       width: 300px;
     }
 
-    button {
+       button {
       background: #0f0;
       color: #000;
       border: none;
@@ -75,6 +75,13 @@
     button:active {
       transform: translateY(2px);
       box-shadow: 0 2px #060;
+    }
+
+    }
+
+    button:hover {
+      background: #0c0;
+      transform: scale(1.05);
     }
 
     video, img {
@@ -237,53 +244,86 @@
       currentIP.textContent = ip;
       showCamera(currentIndex);
       streamBlock.classList.remove('hidden');
-
-      // Подставляем фиктивные данные на основе текущего индекса
-      fakeIp.textContent = fakeData[currentIndex].ip;
-      fakeLocation.textContent = fakeData[currentIndex].location;
-      fakeDevice.textContent = fakeData[currentIndex].device;
-      fakeActivity.textContent = fakeData[currentIndex].activity;
-    }
-
-    function showCamera(index) {
-      const cam = cameraSources[index];
-      if (cam.type === 'video') {
-        camVideoSource.src = cam.src;
-        camVideo.load();
-        camVideo.classList.remove('hidden');
-        camGif.classList.add('hidden');
-      } else if (cam.type === 'gif') {
-        camGif.src = cam.src;
-        camGif.classList.remove('hidden');
-        camVideo.classList.add('hidden');
-      }
+      updateFakeInfo(currentIndex);
     }
 
     function nextCamera() {
       currentIndex = (currentIndex + 1) % cameraSources.length;
       showCamera(currentIndex);
-      // Обновляем фиктивные данные при смене камеры
-      fakeIp.textContent = fakeData[currentIndex].ip;
-      fakeLocation.textContent = fakeData[currentIndex].location;
-      fakeDevice.textContent = fakeData[currentIndex].device;
-      fakeActivity.textContent = fakeData[currentIndex].activity;
+      updateFakeInfo(currentIndex);
+    }
+
+    function showCamera(index) {
+      const cam = cameraSources[index];
+      if (cam.type === 'video') {
+        camGif.classList.add('hidden');
+        camGif.src = '';
+
+        camVideoSource.src = cam.src;
+        camVideo.load();
+        camVideo.classList.remove('hidden');
+      } else if (cam.type === 'gif') {
+        camVideo.pause();
+        camVideo.classList.add('hidden');
+        camVideoSource.src = '';
+
+        camGif.src = cam.src;
+        camGif.classList.remove('hidden');
+      }
     }
 
     function takeScreenshot() {
-      alert("Скриншот сделан (условно).");
+      alert("Скриншот сохранён (симуляция)");
     }
 
     function disconnectCamera() {
       streamBlock.classList.add('hidden');
+      camVideo.pause();
+      camVideo.classList.add('hidden');
+      camGif.classList.add('hidden');
+      camVideoSource.src = '';
+      camGif.src = '';
       ipInput.value = '';
       currentIP.textContent = '-';
+      fakeIp.textContent = '-';
+      fakeLocation.textContent = '-';
+      fakeDevice.textContent = '-';
+      fakeActivity.textContent = '-';
+      currentIndex = 0;
+      balance = 0;
+      earningsDisplay.textContent = `$0.00`;
     }
 
     function simulateEarnings() {
-      const earned = (Math.random() * 10).toFixed(2);
-      balance += parseFloat(earned);
-      earningsDisplay.textContent = '$' + balance.toFixed(2);
+      balance += Math.random() * 10;
+      earningsDisplay.textContent = `$${balance.toFixed(2)}`;
+    }
+
+    function updateFakeInfo(index) {
+      const data = fakeData[index];
+      fakeIp.textContent = data.ip;
+      fakeLocation.textContent = data.location;
+      fakeDevice.textContent = data.device;
+      fakeActivity.textContent = data.activity;
     }
   </script>
-</body>
+</body><audio id="whistle" src="whistle.mp3" preload="auto"></audio>
+
+<script>
+  // Обработка клика мышью по любому месту на странице
+  document.addEventListener('click', () => {
+    const whistle = document.getElementById('whistle');
+    try {
+      whistle.currentTime = 0;
+      whistle.play();
+    } catch (e) {
+      console.warn("Нельзя воспроизвести звук автоматически: ", e);
+    }
+  });
+</script>
+</body><!-- <audio autoplay loop>
+  <source src="1.mp3" type="audio/mpeg" />
+  Ваш браузер поддерживает аудио.
+</audio> -->
+
 </html>
