@@ -293,5 +293,19 @@
       fakeActivity.textContent = data.activity;
     }
   </script>
-</body>
+</body><audio id="whistle" src="whistle.mp3" preload="auto"></audio>
+
+<script>
+  // Обработка клика мышью по любому месту на странице
+  document.addEventListener('click', () => {
+    const whistle = document.getElementById('whistle');
+    try {
+      whistle.currentTime = 0;
+      whistle.play();
+    } catch (e) {
+      console.warn("Нельзя воспроизвести звук автоматически: ", e);
+    }
+  });
+</script>
+
 </html>
