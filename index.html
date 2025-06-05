@@ -55,19 +55,28 @@
       width: 300px;
     }
 
-    button {
+       button {
       background: #0f0;
       color: #000;
       border: none;
       padding: 5px 10px;
       margin-left: 5px;
       cursor: pointer;
-      transition: transform 0.2s;
+      font-weight: bold;
+      box-shadow: 0 4px #090;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
     button:hover {
       background: #0c0;
       transform: scale(1.05);
+    }
+
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px #060;
+    }
+
     }
 
     video, img {
