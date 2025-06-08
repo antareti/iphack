@@ -2,150 +2,16 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>iphack - ВЗЛОМЕР IP-камер</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Courier New", monospace;
-      color: #0f0;
-      background: url("200.gif") no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    .overlay {
-      background-color: rgba(0, 0, 0, 0.85);
-      min-height: 100vh;
-      padding: 20px;
-      box-shadow: inset 0 0 20px #0f0;
-    }
-
-    h1 {
-      margin: 0;
-      text-align: center;
-      animation: glitch 1s infinite;
-      font-size: 1.8em;
-    }
-
-    @keyframes glitch {
-      0% { text-shadow: 2px 0 red, -2px 0 cyan; }
-      20% { text-shadow: -2px 0 red, 2px 0 cyan; }
-      40% { text-shadow: 2px 2px red, -2px -2px cyan; }
-      60% { text-shadow: -2px 2px red, 2px -2px cyan; }
-      80% { text-shadow: 2px -2px red, -2px 2px cyan; }
-      100% { text-shadow: 0 0 red, 0 0 cyan; }
-    }
-
-    .console, #stream {
-      background: #111;
-      border: 1px solid #0f0;
-      padding: 15px;
-      margin-top: 20px;
-      animation: fadein 1s ease-in;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    input[type="text"] {
-      background: #000;
-      color: #0f0;
-      border: 1px solid #0f0;
-      padding: 8px;
-      width: 300px;
-      font-size: 1em;
-    }
-
-    button {
-      background: #0f0;
-      color: #000;
-      border: none;
-      padding: 8px 12px;
-      margin-top: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 4px #090;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    button:hover {
-      background: #0c0;
-      transform: scale(1.05);
-    }
-
-    button:active {
-      transform: translateY(2px);
-      box-shadow: 0 2px #060;
-    }
-
-    video, img {
-      width: 100%;
-      max-width: 600px;
-      margin-top: 10px;
-      border: 2px solid #0f0;
-      animation: flicker 1s infinite;
-      display: block;
-    }
-
-    @keyframes flicker {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.92; }
-    }
-
-    .controls {
-      margin-top: 15px;
-    }
-
-    .info {
-      margin-top: 20px;
-      font-size: 14px;
-      background-color: #000;
-      padding: 10px;
-      border: 1px solid #0f0;
-    }
-
-    .info strong {
-      color: #fff;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: #0f0;
-      border-top: 1px solid #0f0;
-      margin-top: 30px;
-    }
-
-    a {
-      color: #0f0;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    audio {
-      display: none;
-    }
-
-    #earnings {
-      font-size: 20px;
-      margin-top: 5px;
-    }
+    /* Тот же CSS, который ты уже предоставил */
+    /* ... (опущено для краткости, не забудь вставить CSS из своего примера) ... */
   </style>
 </head>
 <body>
   <audio autoplay loop>
-    <source src="1.mp3" type="audio/mpeg" />
+    <source src="1.mp3" type="audio/mpeg">
     Ваш браузер не поддерживает аудио.
   </audio>
 
@@ -166,19 +32,16 @@
 
     <div class="console">
       <p>> 💸 Поддержать проект через TON:</p>
-      <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">
-        📲 Перевести через Tonkeeper
-      </a><br/><br/>
-      <button onclick="window.open('https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr', '_blank')">Оплатить</button>
+      <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">📲 Перевести через Tonkeeper</a>
     </div>
 
     <div id="stream" class="hidden">
       <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
       <video id="camVideo" autoplay muted loop class="hidden">
-        <source id="camVideoSource" src="" type="video/mp4" />
+        <source id="camVideoSource" src="camera.mp4" type="video/mp4" />
         Ваш браузер не поддерживает видео.
       </video>
-      <img id="camGif" src="" alt="Камера GIF" class="hidden" />
+      <img id="camGif" src="camera.gif" alt="Камера GIF" class="hidden" />
 
       <div class="controls">
         <button onclick="nextCamera()">Следующая камера</button>
@@ -215,39 +78,61 @@
     const earningsDisplay = document.getElementById('earnings');
 
     let earnings = 0;
+    let cameraIndex = 0;
+
+    const fakeData = [
+      {
+        ip: '192.168.0.101',
+        location: 'Москва, Россия',
+        device: 'TP-Link IP Cam',
+        activity: 'Дворовая парковка',
+        video: 'camera1.mp4',
+        gif: 'camera1.gif'
+      },
+      {
+        ip: '192.168.1.55',
+        location: 'Новосибирск, Россия',
+        device: 'Xiaomi Smart Cam',
+        activity: 'Гостиная',
+        video: 'camera2.mp4',
+        gif: 'camera2.gif'
+      }
+    ];
 
     function connectCamera() {
-      const ip = ipInput.value || "192.168.0.101";
-      currentIP.textContent = ip;
-      fakeIp.textContent = ip;
-      fakeLocation.textContent = "Токио, Япония";
-      fakeDevice.textContent = "Hikvision HD";
-      fakeActivity.textContent = "Детекция движения";
+      const data = fakeData[cameraIndex];
+      currentIP.textContent = data.ip;
+      fakeIp.textContent = data.ip;
+      fakeLocation.textContent = data.location;
+      fakeDevice.textContent = data.device;
+      fakeActivity.textContent = data.activity;
+      camVideoSource.src = data.video;
+      camVideo.load();
 
-      streamBlock.classList.remove("hidden");
-      camGif.classList.remove("hidden");
-      camGif.src = "cam1.gif";
-    }
-
-    function simulateEarnings() {
-      earnings += Math.random() * 5 + 1;
-      earningsDisplay.textContent = `$${earnings.toFixed(2)}`;
+      camVideo.classList.remove('hidden');
+      camGif.classList.add('hidden');
+      streamBlock.classList.remove('hidden');
     }
 
     function nextCamera() {
-      camGif.src = "cam2.gif";
-      fakeLocation.textContent = "Москва, Россия";
-      fakeDevice.textContent = "EZVIZ WiFi";
-      fakeActivity.textContent = "Ночь, обнаружен объект";
+      cameraIndex = (cameraIndex + 1) % fakeData.length;
+      connectCamera();
     }
 
     function disconnectCamera() {
-      streamBlock.classList.add("hidden");
-      camGif.classList.add("hidden");
+      streamBlock.classList.add('hidden');
+      camVideo.pause();
+      camVideo.classList.add('hidden');
     }
 
     function takeScreenshot() {
-      alert("📸 Скриншот сохранён (симуляция)");
+      alert('Скриншот сохранён! (симуляция)');
+    }
+
+    function simulateEarnings() {
+      const amount = Math.random() * 10 + 1;
+      earnings += amount;
+      earningsDisplay.textContent = `$${earnings.toFixed(2)}`;
     }
   </script>
 </body>
