@@ -8,7 +8,7 @@
     body {
       margin: 0;
       padding: 0;
-      font-family: monospace;
+      font-family: "Courier New", monospace;
       color: #0f0;
       background: url("200.gif") no-repeat center center fixed;
       background-size: cover;
@@ -18,11 +18,14 @@
       background-color: rgba(0, 0, 0, 0.85);
       min-height: 100vh;
       padding: 20px;
+      box-shadow: inset 0 0 20px #0f0;
     }
 
     h1 {
       margin: 0;
+      text-align: center;
       animation: glitch 1s infinite;
+      font-size: 1.8em;
     }
 
     @keyframes glitch {
@@ -39,7 +42,7 @@
       border: 1px solid #0f0;
       padding: 15px;
       margin-top: 20px;
-      animation: fadein 2s;
+      animation: fadein 1s ease-in;
     }
 
     @keyframes fadein {
@@ -48,19 +51,20 @@
     }
 
     input[type="text"] {
-      background: #222;
+      background: #000;
       color: #0f0;
       border: 1px solid #0f0;
-      padding: 5px;
+      padding: 8px;
       width: 300px;
+      font-size: 1em;
     }
 
-       button {
+    button {
       background: #0f0;
       color: #000;
       border: none;
-      padding: 5px 10px;
-      margin-left: 5px;
+      padding: 8px 12px;
+      margin-top: 10px;
       cursor: pointer;
       font-weight: bold;
       box-shadow: 0 4px #090;
@@ -77,13 +81,6 @@
       box-shadow: 0 2px #060;
     }
 
-    }
-
-    button:hover {
-      background: #0c0;
-      transform: scale(1.05);
-    }
-
     video, img {
       width: 100%;
       max-width: 600px;
@@ -95,17 +92,17 @@
 
     @keyframes flicker {
       0%, 100% { opacity: 1; }
-      50% { opacity: 0.95; }
+      50% { opacity: 0.92; }
     }
 
     .controls {
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     .info {
       margin-top: 20px;
       font-size: 14px;
-      background-color: #111;
+      background-color: #000;
       padding: 10px;
       border: 1px solid #0f0;
     }
@@ -118,15 +115,18 @@
       text-align: center;
       padding: 20px;
       color: #0f0;
-    }
-
-    p {
-      margin: 5px 0;
+      border-top: 1px solid #0f0;
+      margin-top: 30px;
     }
 
     a {
       color: #0f0;
       font-weight: bold;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
 
     .hidden {
@@ -146,11 +146,11 @@
 <body>
   <audio autoplay loop>
     <source src="1.mp3" type="audio/mpeg" />
-    Ваш браузер  поддерживает аудио.
+    Ваш браузер не поддерживает аудио.
   </audio>
 
   <div class="overlay">
-    <h1>💀 📡 🌍 🐍 iphack ВЗЛОМ HACK FREE ЗДЕСЬ МОЖНО ЗАРАБОТАТЬ</h1>
+    <h1>💀 📡 🌍 🐍 iphack — ВЗЛОМЕР IP-КАМЕР [2025]</h1>
 
     <div class="console">
       <p>> Введите IP-камеру:</p>
@@ -159,24 +159,21 @@
     </div>
 
     <div class="console">
-      <p>> Баланс:</p>
+      <p>> 💰 Баланс:</p>
       <div id="earnings">$0.00</div>
       <button onclick="simulateEarnings()">Взломать и заработать</button>
     </div>
 
     <div class="console">
-      <p>> 💸 Поддержать проект TON-переводом:</p>
+      <p>> 💸 Поддержать проект через TON:</p>
       <a href="https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr" target="_blank">
-        📲 Отправить донат через Tonkeeper
-      </a>
-      <br /><br />
+        📲 Перевести через Tonkeeper
+      </a><br/><br/>
       <button onclick="window.open('https://tonkeeper.com/transfer/UQB1VJhJmRowKWsqJig_T6DTNMO7Chdlfmi54WMpVfTdojUr', '_blank')">Оплатить</button>
     </div>
 
     <div id="stream" class="hidden">
       <p class="status">[*] Подключение к <span id="currentIP">-</span> установлено...</p>
-
-      <!-- Видео и гиф можно переключать, здесь один блок для показа -->
       <video id="camVideo" autoplay muted loop class="hidden">
         <source id="camVideoSource" src="" type="video/mp4" />
         Ваш браузер не поддерживает видео.
@@ -197,11 +194,10 @@
     </div>
 
     <footer>
-      <p>iphack © 2025 — чисто визуальный реально</p>
-      <p><a href="https://t.me/vipcam1977" target="_blank">Обратная связь</a></p>
+      <p>iphack © 2025 — только визуальный симулятор</p>
+      <p><a href="https://t.me/vipcam1977" target="_blank">📩 Обратная связь</a></p>
+      <p><a href="page2.html">📜 Инструкция</a></p>
     </footer>
-
-    <p><a href="page2.html">📜 Инструкция</a></p>
   </div>
 
   <script>
@@ -218,112 +214,41 @@
     const currentIP = document.getElementById('currentIP');
     const earningsDisplay = document.getElementById('earnings');
 
-    // Три камеры: два видео и одна gif
-    const cameraSources = [
-      { type: 'video', src: '14.mp4' },
-      { type: 'video', src: '15.mp4' },
-      { type: 'gif', src: '15.gif' }
-    ];
-
-    const fakeData = [
-      { ip: '192.168.0.23', location: 'Москва, Россия', device: 'EZVIZ C3W', activity: 'Двор, движение' },
-      { ip: '10.0.0.5', location: 'Новосибирск, Россия', device: 'Hikvision DS-2CD', activity: 'Подъезд, статично' },
-      { ip: '172.16.0.8', location: 'Санкт-Петербург, Россия', device: 'Dahua IPC-HFW', activity: 'Парковка, движение' }
-    ];
-
-    let currentIndex = 0;
-    let balance = 0;
+    let earnings = 0;
 
     function connectCamera() {
-      const ip = ipInput.value.trim();
-      if (!ip) {
-        alert("Введите IP-адрес камеры.");
-        return;
-      }
-
+      const ip = ipInput.value || "192.168.0.101";
       currentIP.textContent = ip;
-      showCamera(currentIndex);
-      streamBlock.classList.remove('hidden');
-      updateFakeInfo(currentIndex);
-    }
+      fakeIp.textContent = ip;
+      fakeLocation.textContent = "Токио, Япония";
+      fakeDevice.textContent = "Hikvision HD";
+      fakeActivity.textContent = "Детекция движения";
 
-    function nextCamera() {
-      currentIndex = (currentIndex + 1) % cameraSources.length;
-      showCamera(currentIndex);
-      updateFakeInfo(currentIndex);
-    }
-
-    function showCamera(index) {
-      const cam = cameraSources[index];
-      if (cam.type === 'video') {
-        camGif.classList.add('hidden');
-        camGif.src = '';
-
-        camVideoSource.src = cam.src;
-        camVideo.load();
-        camVideo.classList.remove('hidden');
-      } else if (cam.type === 'gif') {
-        camVideo.pause();
-        camVideo.classList.add('hidden');
-        camVideoSource.src = '';
-
-        camGif.src = cam.src;
-        camGif.classList.remove('hidden');
-      }
-    }
-
-    function takeScreenshot() {
-      alert("Скриншот сохранён (симуляция)");
-    }
-
-    function disconnectCamera() {
-      streamBlock.classList.add('hidden');
-      camVideo.pause();
-      camVideo.classList.add('hidden');
-      camGif.classList.add('hidden');
-      camVideoSource.src = '';
-      camGif.src = '';
-      ipInput.value = '';
-      currentIP.textContent = '-';
-      fakeIp.textContent = '-';
-      fakeLocation.textContent = '-';
-      fakeDevice.textContent = '-';
-      fakeActivity.textContent = '-';
-      currentIndex = 0;
-      balance = 0;
-      earningsDisplay.textContent = `$0.00`;
+      streamBlock.classList.remove("hidden");
+      camGif.classList.remove("hidden");
+      camGif.src = "cam1.gif";
     }
 
     function simulateEarnings() {
-      balance += Math.random() * 10;
-      earningsDisplay.textContent = `$${balance.toFixed(2)}`;
+      earnings += Math.random() * 5 + 1;
+      earningsDisplay.textContent = `$${earnings.toFixed(2)}`;
     }
 
-    function updateFakeInfo(index) {
-      const data = fakeData[index];
-      fakeIp.textContent = data.ip;
-      fakeLocation.textContent = data.location;
-      fakeDevice.textContent = data.device;
-      fakeActivity.textContent = data.activity;
+    function nextCamera() {
+      camGif.src = "cam2.gif";
+      fakeLocation.textContent = "Москва, Россия";
+      fakeDevice.textContent = "EZVIZ WiFi";
+      fakeActivity.textContent = "Ночь, обнаружен объект";
+    }
+
+    function disconnectCamera() {
+      streamBlock.classList.add("hidden");
+      camGif.classList.add("hidden");
+    }
+
+    function takeScreenshot() {
+      alert("📸 Скриншот сохранён (симуляция)");
     }
   </script>
-</body><audio id="whistle" src="whistle.mp3" preload="auto"></audio>
-
-<script>
-  // Обработка клика мышью по любому месту на странице
-  document.addEventListener('click', () => {
-    const whistle = document.getElementById('whistle');
-    try {
-      whistle.currentTime = 0;
-      whistle.play();
-    } catch (e) {
-      console.warn("Нельзя воспроизвести звук автоматически: ", e);
-    }
-  });
-</script>
-</body><!-- <audio autoplay loop>
-  <source src="1.mp3" type="audio/mpeg" />
-  Ваш браузер поддерживает аудио.
-</audio> -->
-
+</body>
 </html>
