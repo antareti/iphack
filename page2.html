@@ -64,6 +64,7 @@
       width: 100%;
       height: 400px;
       display: block;
+      border: none;
     }
   </style>
 </head>
@@ -95,14 +96,8 @@
     <p><strong>Активность:</strong> <span id="info-activity">–</span></p>
   </div>
 
-  <<div class="video-section" style="height:auto; padding:0;">
-  <a href="https://www.youtube.com/watch?v=zDeytRNc74Y" target="_blank">
-    <img src="https://img.youtube.com/vi/zDeytRNc74Y/hqdefault.jpg" alt="Видео превью" style="width:100%; display:block; border:0;">
-    <div style="text-align:center; background:#000; color:#00ffcc; padding:1rem; font-size:1.2rem;">▶ Смотреть на YouTube</div>
-  </a>
-</div>
-
-    </iframe>
+  <div class="video-section">
+    <iframe src="https://www.youtube.com/embed/zDeytRNc74Y" allowfullscreen></iframe>
   </div>
 
   <script>
@@ -138,14 +133,14 @@
       document.getElementById('info-location').innerText = locations[Math.floor(Math.random() * locations.length)];
       document.getElementById('info-activity').innerText = activities[Math.floor(Math.random() * activities.length)];
 
-      log(`Установлено соединение с ${ip}`);
+      console.log(`Установлено соединение с ${ip}`);
     }
 
     function simulateEarnings() {
       const amount = (Math.random() * 0.2 + 0.01).toFixed(2);
       earnings += parseFloat(amount);
       document.getElementById('earnings').innerText = earnings.toFixed(2);
-      log(`Взлом выполнен. Получено $${amount}`);
+      console.log(`Взлом выполнен. Получено $${amount}`);
     }
 
     function nextCamera() {
@@ -155,7 +150,7 @@
 
     function takeScreenshot() {
       alert('Скриншот сохранён! (эмуляция)');
-      log('Сделан скриншот.');
+      console.log('Сделан скриншот.');
     }
 
     function disconnectCamera() {
@@ -164,7 +159,7 @@
       document.getElementById('info-device').innerText = '–';
       document.getElementById('info-location').innerText = '–';
       document.getElementById('info-activity').innerText = '–';
-      log('Соединение разорвано.');
+      console.log('Соединение разорвано.');
     }
   </script>
 </body>
