@@ -8,85 +8,95 @@
   <style>
     body {
       background-color: #0d0d0d;
-      color: #00ffcc;
-      font-family: 'Courier New', Courier, monospace;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
       padding: 2rem;
     }
+
     h1 {
-      font-size: 3rem;
       text-align: center;
-      animation: glitch 1s infinite;
+      font-size: 3rem;
+      margin-bottom: 2rem;
     }
-    @keyframes glitch {
-      0% {text-shadow: 2px 2px red;}
-      25% {text-shadow: -2px -2px cyan;}
-      50% {text-shadow: 2px -2px lime;}
-      75% {text-shadow: -2px 2px yellow;}
-      100% {text-shadow: 2px 2px red;}
+
+    .hub-white {
+      background-color: #fff;
+      color: #000;
+      padding: 0.2rem 0.6rem;
+      font-weight: bold;
     }
+
+    .hub-orange {
+      background-color: #ff9900;
+      color: #000;
+      padding: 0.2rem 0.6rem;
+      font-weight: bold;
+    }
+
     .camera-container, .controls, .info-box {
       margin-top: 2rem;
       padding: 1rem;
-      border: 1px solid #00ffcc;
+      border: 1px solid #ff9900;
       border-radius: 8px;
       background-color: #1a1a1a;
     }
+
     input, button {
       padding: 0.5rem;
       font-size: 1rem;
       margin-top: 1rem;
     }
+
     video, img {
       width: 100%;
       max-height: 400px;
       object-fit: cover;
     }
+
     .earnings {
       font-size: 2rem;
       color: #00ff00;
       margin-top: 1rem;
     }
-    .log {
-      background-color: #000;
-      padding: 0.5rem;
-      height: 150px;
-      overflow-y: scroll;
-      font-size: 0.9rem;
-      margin-top: 1rem;
-    }
+
     .video-section {
       margin-top: 3rem;
-      border: 2px solid #00ffcc;
+      border: 2px solid #ff9900;
       border-radius: 12px;
       overflow: hidden;
     }
+
     .video-section iframe {
       width: 100%;
       height: 400px;
       display: block;
       border: none;
     }
+
     .telegram-link {
       margin-top: 3rem;
       text-align: center;
     }
+
     .telegram-link a {
       display: inline-block;
       padding: 1rem 2rem;
-      background-color: #0088cc;
-      color: white;
+      background-color: #ff9900;
+      color: #000;
       font-size: 1.2rem;
       text-decoration: none;
       border-radius: 10px;
       transition: background-color 0.3s ease;
     }
+
     .telegram-link a:hover {
-      background-color: #005f88;
+      background-color: #cc7a00;
     }
   </style>
 </head>
 <body>
-  <h1>📡 IP Hack REAL 🐍 🌟 🌙  HACKING</h1>
+
+  <h1><span class="hub-white">IP</span><span class="hub-orange">HACK</span></h1>
 
   <div class="camera-container">
     <label for="ip">Enter IP:</label>
@@ -123,9 +133,9 @@
 
   <script>
     const cameraSources = [
-      'https://theintercept.com/wp-content/uploads/2016/10/gif-1.gif?fit=1439%2C961',
-      'https://voyeur-house.tv/blog/wp-content/uploads/2019/04/Cohen-friends-have-sex-while-sarita-bates-mar-27-1.gif',
-      'https://voyeur-house.tv/blog/wp-content/uploads/2019/04/Wet-and-hot-oral-lesbian-caresses-with-Emily-and-Kira-April-19.gif'
+      'https://media.tenor.com/IYx7PRr6cBkAAAAd/cctv-surveillance.gif',
+      'https://media.tenor.com/HMoOX9rGp7gAAAAC/security-camera.gif',
+      'https://media.tenor.com/rwK4U6FdAHkAAAAC/camera-hacking-hacked.gif'
     ];
 
     const devices = ['TP-Link Cam V3', 'Xiaomi Home Eye', 'Hikvision Dome Pro'];
@@ -135,25 +145,15 @@
     let earnings = 0;
     let cameraIndex = 0;
 
-    function log(message) {
-      const logBox = document.getElementById('log');
-      const time = new Date().toLocaleTimeString();
-      logBox.innerHTML += `[${time}] ${message}<br>`;
-      logBox.scrollTop = logBox.scrollHeight;
-    }
-
     function connectCamera() {
       const ip = document.getElementById('ip').value;
       if (!ip) return alert('Введите IP-адрес.');
-
       const feed = document.getElementById('videoFeed');
       feed.src = cameraSources[cameraIndex % cameraSources.length];
-
       document.getElementById('info-ip').innerText = ip;
       document.getElementById('info-device').innerText = devices[Math.floor(Math.random() * devices.length)];
       document.getElementById('info-location').innerText = locations[Math.floor(Math.random() * locations.length)];
       document.getElementById('info-activity').innerText = activities[Math.floor(Math.random() * activities.length)];
-
       console.log(`Установлено соединение с ${ip}`);
     }
 
